@@ -21,6 +21,9 @@ export class Subject {
   @Column({ nullable: true })
   description: string;
 
+  @Column({ default: true })
+  isActive: boolean;
+
   @OneToMany(() => Session, (session) => session.subject)
   sessions: Session[];
 
