@@ -13,6 +13,6 @@ export class RegisterDto {
   password: string;
 
   @IsOptional()
-  @IsIn(['student', 'tutor'])
+  @IsIn(['student', 'tutor', 'admin'])
   role?: string;
 }

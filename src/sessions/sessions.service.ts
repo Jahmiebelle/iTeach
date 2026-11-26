@@ -23,24 +23,32 @@ export class SessionsService {
   ) {}
 
   private async validateReferences(
-    studentId: number,
-    tutorId: number,
-    subjectId: number,
-  ) {
-    if (studentId === tutorId) {
-      throw new BadRequestException('Student and tutor must be different users');
-    }
-
-    const [student, tutor, subject] = await Promise.all([
-      this.usersRepository.findOne({ where: { id: studentId } }),
-      this.usersRepository.findOne({ where: { id: tutorId } }),
-      this.subjectsRepository.findOne({ where: { id: subjectId } }),
-    ]);
-
-    if (!student) throw new NotFoundException(`Student #${studentId} not found`);
-    if (!tutor) throw new NotFoundException(`Tutor #${tutorId} not found`);
-    if (!subject) throw new NotFoundException(`Subject #${subjectId} not found`);
+  studentId: number,
+  tutorId: number,
+  subjectId: number,
+) {
+  if (studentId === tutorId) {
+    throw new BadRequestException('Student and tutor must be different users');
   }
+
+  const [student, tutor, subject] = await Promise.all([
+    this.usersRepository.findOne({ where: { id: studentId } }),
+    this.usersRepository.findOne({ where: { id: tutorId } }),
+    this.subjectsRepository.findOne({ where: { id: subjectId } }),
+  ]);
+
+  if (!student) throw new NotFoundException(`Student #${studentId} not found`);
+  if (student.role !== 'student') {
+    throw new BadRequestException(`User #${studentId} is not a student`);
+  }
+
+  if (!tutor) throw new NotFoundException(`Tutor #${tutorId} not found`);
+  if (tutor.role !== 'tutor') {
+    throw new BadRequestException(`User #${tutorId} is not a tutor`);
+  }
+
+  if (!subject) throw new NotFoundException(`Subject #${subjectId} not found`);
+}
 
   async create(dto: CreateSessionDto) {
     await this.validateReferences(dto.studentId, dto.tutorId, dto.subjectId);
