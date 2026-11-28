@@ -16,9 +16,9 @@ RESTful backend API for the iTeach: University Peer-Tutor Scheduling & Managemen
    npm install
    
 ## Creating iTeach Database
-CREATE DATABASE IF NOT EXISTS iteach;
+`CREATE DATABASE IF NOT EXISTS iteach;`
 
 ## To start the server on VSCode
-npm run start:dev
+`npm run start:dev`
 
 The API runs at http://localhost:3000
